@@ -1,0 +1,1654 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Решатель</title>
+    <script type="text/javascript">
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']],
+                processEscapes: true,
+                processEnvironments: true,
+                packages: { '[+]': ['noerrors', 'text'] },
+            },
+            options: {
+                skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre']
+            }
+        };
+    </script>
+    <script type="text/javascript" async src="MathJax/es5/tex-svg.js"></script>
+    <script type="text/javascript" src="scripts/math.js"></script>
+    <script type="text/javascript" src="scripts/algebrite.bundle-for-browser.js"></script>
+    <script type="text/javascript" src="nerdamer/nerdamer.core.js"></script>
+    <script type="text/javascript" src="nerdamer/Algebra.js"></script>
+    <script type="text/javascript" src="nerdamer/Calculus.js"></script>
+    <script type="text/javascript" src="nerdamer/Solve.js"></script>
+    <script type="text/javascript" src="nerdamer/Extra.js"></script>
+    <script type="text/javascript" src="scripts/for_irrationality.js"></script>
+    <script type="text/javascript" src="scripts/for_first_wonderful_law.js"></script>
+    <script type="text/javascript" src="scripts/for_lopital_rule.js"></script>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 10px;
+            background-color: #f0f0f0;
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-top: 10px;
+            margin-bottom: 10px;
+            font-size: 30px;
+        }
+
+        .form_container {
+            background-color: #fff;
+            border: 1px solid #ddd;
+            padding: 5px;
+            border-radius: 8px;
+        }
+
+        .limit_formula_container {
+            display: flex;
+            align-items: center;
+            background-color: #fff;
+            padding: 5px;
+            border-radius: 4px;
+            margin-left: 5px;
+            margin-bottom: 5px;
+            margin-top: 25px;
+        }
+
+        .limit_prefix {
+            font-size: 24px;
+            display: inline-flex;
+            flex-direction: column;
+            justify-content: center;
+            position: relative;
+            margin-right: 20px;
+            padding-left: 40px;
+            bottom: 30px;
+        }
+
+        .limit_prefix sub {
+            position: absolute;
+            left: 0;
+            bottom: -30px;
+            font-size: 18px;
+            line-height: 1;
+            white-space: nowrap;
+        }
+
+
+        .approach_container {
+            display: flex;
+            align-items: center;
+            margin-right: 10px;
+        }
+
+        .approach_container button {
+            font-size: 18px;
+            margin: 0 5px;
+        }
+
+        .approach_container input {
+            font-size: 18px;
+            padding: 5px 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            margin-right: 1px;
+            text-align: center;
+        }
+
+        .approach_container input,
+        .formula_input input {
+            flex-shrink: 1;
+        }
+
+        #approach_value {
+            width: 30px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            display: inline-block;
+            text-align: center;
+        }
+
+        #infinity_button {
+            padding: 5px 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            margin-left: 0;
+            font-size: 18px;
+            background-color: #6bba60;
+            cursor: pointer;
+        }
+
+        #infinity_button:hover {
+            transition: background-color 0.8s;
+            background-color: #a2c891;
+        }
+
+        .formula_input {
+            display: flex;
+            flex-direction: column;
+            flex-shrink: 1;
+            width: calc(100% - 11%);
+            margin-left: 5%;
+            margin-top: -5px;
+        }
+
+        .formula_input input {
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 15px;
+        }
+
+        .buttons_container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 5px;
+        }
+
+        .mathjax_button {
+            background-color: #f9f9f9;
+            border-radius: 8px;
+            font-size: 15px;
+            color: black;
+            margin-bottom: 4px;
+            border: 1px solid #ddd;
+            padding: 5px 5px;
+            cursor: pointer;
+            width: 100%;
+            text-align: center;
+            transition: background-color 0.3s;
+        }
+
+        .mathjax_button:hover {
+            transition: background-color 0.8s, border-color 0.3s;
+            background-color: #90d593;
+            border-color: #3e8e41;
+        }
+
+        .mathjax_button.active {
+            background-color: #5f9149;
+            color: white;
+        }
+
+        .decision_button_container {
+            text-align: center;
+            margin-top: 5px;
+            margin-bottom: 5px;
+        }
+
+        .decision_button {
+            background-color: #749acc;
+            border-radius: 8px;
+            font-size: 15px;
+            color: black;
+            margin-bottom: 4px;
+            border: 1px solid #295d98;
+            padding: 5px 5px;
+            cursor: pointer;
+            width: 15%;
+            text-align: center;
+            transition: background-color 0.3s;
+        }
+
+        .decision_button:hover {
+            transition: background-color 0.8s, border-color 0.3s;
+            background-color: #a590d5;
+            border-color: #673e8e;
+        }
+
+        .mathjax-text {
+            display: inline;
+            font-size: 18px;
+        }
+
+        #renderedEquation {
+            text-align: center;
+            border: 1px solid #ddd;
+            padding: 10px;
+            width: 98%;
+            margin-top: 10px;
+            margin-bottom: 10px;
+            margin-left: auto;
+            margin-right: auto;
+            background-color: #ffffff;
+            font-size: 20px;
+            height: 100px;
+            overflow: auto;
+            overflow-y: auto;
+        }
+
+        .solution_steps_container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Arial', sans-serif;
+            font-size: 18px;
+        }
+
+        .solution_steps_style {
+            border: 1px solid #ddd;
+            margin-top: 5px;
+            padding: 15px;
+            background-color: #fff;
+            border-radius: 8px;
+            font-size: 16px;
+            color: #333;
+            width: 100%;
+            min-height: 100px;
+            max-height: 600px;
+            margin-left: 20px;
+            margin-right: 20px;
+            overflow-y: auto;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Решатель</h1>
+
+    <div id="loadingIndicator"
+        style="display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 100; background: white; padding: 10px; border-radius: 5px; box-shadow: 0px 0px 10px rgba(0,0,0,0.5);">
+        Обработка...
+    </div>
+    <div class="form_container">
+        <div class="instructions">Введите вашу формулу здесь:</div>
+        <div class="limit_formula_container">
+            <div class="limit_prefix">lim
+                <sub>
+                    <div class="approach_container">
+                        x→ <input type="text" id="approach_value" placeholder="0">
+                        <button id="infinity_button" type="button" onclick="setInfinity()">∞</button>
+                    </div>
+                </sub>
+            </div>
+            <div class="formula_input">
+                <input type="text" id="input-formula" placeholder="Введите вашу формулу">
+            </div>
+        </div>
+    </div>
+    <div id="renderedEquation"></div>
+    <div class="decision_button_container">
+        <button type="button" class="decision_button" id="decision_but" onclick="decision_func()">Решить</button>
+        <button type="button" class="decision_button" id="process_but"
+            onclick="updateRenderedEquation()">Обработать</button>
+    </div>
+    <div class="buttons_container">
+        <button type="button" class="mathjax_button" id="autodetect"
+            onclick="toggleButton('autodetect')">Автоопределение. При
+            выборе данного способа подробный ход решения выведен не будет.</button>
+        <button type="button" class="mathjax_button" id="uncertainty" onclick="toggleButton('uncertainty')">
+            Пределы вида <span class="mathjax-text"> \(\lim_{x \to 2} \frac{x^2+14x-32}{x^2-6x+8}={\left(\frac{0}{0}
+                \right)}.\)</span>
+        </button>
+        <button type="button" class="mathjax_button" id="irrationality" onclick="toggleButton('irrationality')">
+            Пределы с иррациональностью, например <span class="mathjax-text"> \(\lim_{x \to 1}
+                \frac{\sqrt{2-x}-1}{\sqrt{5-x}-2}\)</span> или <span class="mathjax-text"> \(\lim_{x \to 2}
+                \frac{x^2-2x}{\sqrt{x^2+6x}-4}.\)</span></button>
+        <button type="button" class="mathjax_button" id="first_remarkable_limit"
+            onclick="toggleButton('first_remarkable_limit')">Вычисление предела с помощью свойства первого
+            замечательного предела, например <span class="mathjax-text"> \(\lim_{x \to 0} \frac{\sin(ax)}{x}.\)</span>
+        </button>
+        <button type="button" class="mathjax_button" id="lopital_rule" onclick="toggleButton('lopital_rule')">Вычисление
+            предела с использованием правила Лопиталя.</button>
+    </div>
+
+    <div class="solution_steps_container">
+        <div id="solution_steps" class="solution_steps_style">
+        </div>
+    </div>
+
+    <script>
+
+
+        function decision_func() {
+            if (!active_Button) {
+                alert("Выберите способ решения");
+                return;
+            }
+
+            switch (active_Button) {
+                case 'autodetect':
+                    autodetect_Method();
+                    break;
+                case 'uncertainty':
+                    uncertainty_Method();
+                    break;
+                case 'irrationality':
+                    irrationality_Method();
+                    break;
+                case 'first_remarkable_limit':
+                    first_remarkable_limit_Method();
+                    break;
+                case 'lopital_rule':
+                    lopital_rule_Method()
+                    break;
+            }
+        }
+
+        function getInputValues() {
+            const user_Formula = document.getElementById('input-formula').value;
+            const value_x = document.getElementById('approach_value').value || '0';
+            limitTo = nerdamer(value_x);
+            if (value_x === '∞') {
+                limitTo = '\\infty';
+            } else if (value_x === '-∞') {
+                limitTo = '-\\infty';
+            } else {
+                limitTo = limitTo.toTeX();
+            }
+
+            if (value_x === '0') {
+                limitTo = '0';
+            }
+            return {
+                user_Formula,
+                value_x,
+                mathJax_Formatted_Formula: format_Formula_For_MathJax(user_Formula),
+                formula_for_step: String(user_Formula),
+                limitTo: limitTo
+            };
+        }
+
+        function autodetect_Method() {
+            var { user_Formula, value_x, mathJax_Formatted_Formula, formula_for_step, limitTo } = getInputValues();
+            const solution_Steps_HTML = createsolution_Steps_HTML_for_autodetect(mathJax_Formatted_Formula, value_x, formula_for_step, limitTo);
+            document.getElementById('solution_steps').innerHTML = solution_Steps_HTML;
+            MathJax.typesetPromise();
+            hideLoadingIndicator();
+        }
+
+        function uncertainty_Method() {
+            const { user_Formula, value_x, mathJax_Formatted_Formula, formula_for_step } = getInputValues();
+            const solution_Steps_HTML = createsolution_Steps_HTML_for_uncertainty(mathJax_Formatted_Formula, value_x, formula_for_step, limitTo);
+            document.getElementById('solution_steps').innerHTML = solution_Steps_HTML;
+            MathJax.typesetPromise();
+        }
+
+        function irrationality_Method() {
+            const { user_Formula, value_x, mathJax_Formatted_Formula, formula_for_step } = getInputValues();
+            const solution_Steps_HTML = createsolution_Steps_HTML_for_irrationality(mathJax_Formatted_Formula, value_x, formula_for_step, limitTo);
+            document.getElementById('solution_steps').innerHTML = solution_Steps_HTML;
+            MathJax.typesetPromise();
+        }
+
+        function first_remarkable_limit_Method() {
+            const { user_Formula, value_x, mathJax_Formatted_Formula, formula_for_step } = getInputValues();
+            const solution_Steps_HTML = createsolution_Steps_HTML_for_first_remarkable_limit(mathJax_Formatted_Formula, value_x, formula_for_step, limitTo);
+            document.getElementById('solution_steps').innerHTML = solution_Steps_HTML;
+            MathJax.typesetPromise();
+        }
+
+        function lopital_rule_Method() {
+            const { user_Formula, value_x, mathJax_Formatted_Formula, formula_for_step } = getInputValues();
+            const solution_Steps_HTML = createsolution_Steps_HTML_lopital_rule(mathJax_Formatted_Formula, value_x, formula_for_step, limitTo);
+            document.getElementById('solution_steps').innerHTML = solution_Steps_HTML;
+            MathJax.typesetPromise();
+        }
+
+
+        function calculate_Limit(formula, value_x) {
+            try {
+                var scope;
+                if (value_x === '∞') {
+                    scope = 'Infinity';
+                } else if (value_x === '-∞') {
+                    scope = '-Infinity';
+                } else if (value_x.includes('pi') || value_x.includes('π')) {
+                    scope = value_x.replace(/pi|π/g, 'pi');
+                } else {
+                    scope = value_x.toString();
+                }
+
+                let result = nerdamer(`limit(${formula}, x, ${scope})`).evaluate();
+
+                var fractionResult, decimalResult;
+
+                if (result.symbol.isInfinity) {
+                    var isNegative = result.symbol && result.symbol.multiplier.num.sign;
+
+                    if (isNegative) {
+                        fractionResult = decimalResult = '-∞';
+                    } else {
+                        fractionResult = decimalResult = '∞';
+                    }
+
+                    return {
+                        fraction: fractionResult,
+                        decimal: decimalResult
+                    };
+                }
+                else if (result.symbol.imaginary) {
+                    fractionResult = decimalResult = result.text('ascii');
+                } else {
+                    fractionResult = result.text('fraction');
+                    decimalResult = math.format(result, { notation: 'fixed', precision: 4 });
+                    var ost = decimalResult % 1;
+                    if (fractionResult === '0') {
+                        decimalResult = '0';
+                    } else {
+                        if (ost === 0) {
+                            decimalResult = fractionResult;
+                        } else {
+                            if (result.isFraction()) {
+                                decimalResult = result.evaluate().valueOf();
+                                decimalResult = decimalResult.toFixed(2);
+                            } else {
+                                decimalResult = parseFloat(result.text('decimal')).toFixed(5);
+                            }
+                        }
+                    }
+
+                }
+
+                return {
+                    fraction: result,
+                    decimal: decimalResult
+                };
+            } catch (e) {
+                return {
+                    fraction: "\\text{не удалось вычислить}",
+                    decimal: "\\text{не удалось вычислить}"
+                };
+            }
+        }
+
+        function format_Formula_For_MathJax(formula) {
+            const trigRegex = /\b(sin|cos|tan|cot)\b/;
+            let availability_trig_func = trigRegex.test(formula); 
+
+            try {
+                    let result = nerdamer(formula).toTeX();
+                    return result;  
+            } catch (error) {
+                formula = formula.replace(/\bpi\b/g, '\\pi');
+
+                formula = formula.replace(/(\d+)\\pi/g, '$1\\cdot \\pi');
+                formula = formula.replace(/\\pi(\d+)/g, '\\pi\\cdot $1');
+
+
+                const fractionPattern = /(\((?:[^()]*(?:\(.*\))?[^()]*)+\))\/(\((?:[^()]*(?:\(.*\))?[^()]*)+\)|\b\d+\b)/g;
+
+                // Преобразование дробей
+                formula = formula.replace(fractionPattern, '\\frac{$1}{$2}');
+
+                // Преобразование корней
+                const sqrtPattern = /sqrt\(((?:\([^()]*\)|[^()])*)\)/g;
+                formula = formula.replace(sqrtPattern, '\\sqrt{$1}');
+
+                // Преобразование экспонент
+                const expPattern = /exp\((.*?)\)/g;
+                formula = formula.replace(expPattern, 'e^{\\left($1\\right)}');
+
+                // Преобразование тригонометрических функций
+                formula = formula.replace(/\bsin\b/g, '\\sin');
+                formula = formula.replace(/\bcos\b/g, '\\cos');
+                formula = formula.replace(/\btan\b/g, '\\tan');
+                formula = formula.replace(/\bcot\b/g, '\\cot');
+
+                // Преобразование констант и специальных функций
+                formula = formula
+                    .replace(/(\b\w+|\([^\)]+\))\^(\((\d+|\d+\/\d+)\))/g, '$1^{$2}')
+                    .replace(/(\b\w+|\([^\)]+\))\^(\d+)/g, '$1^{$2}')
+                    .replace(/abs\(([^()]+)\)/g, '\\left| $1 \\right|');
+
+                // Преобразуем знаки умножения на \cdot
+                formula = formula.replace(/\*/g, '\\cdot ');
+
+                // Добавление скобок
+                formula = formula.replace(/\(/g, '\\left(')
+                    .replace(/\)/g, '\\right)');
+
+            }
+
+            return formula;
+        }
+
+        var changing_numerator;
+        var changing_denominator;
+        var changing_exp;
+        var changing_exp_2;
+        var checking_for_fractions;
+        var checking_for_number;
+        function simplifyExpression_basic(expr, maxSteps = 10) {
+            let steps = [];
+            let simplified_Expr, factorized_Expr;
+            let factorized_Numerator_final, factorized_Denominator_final;
+
+            let expressionObj = nerdamer(expr);
+            let evaluatedString = expressionObj.evaluate().toString();
+
+            if (!isNaN(parseFloat(evaluatedString)) && isFinite(evaluatedString)) {
+                checking_for_number = true;
+                return {
+                    evaluatedString: evaluatedString,
+                    checking_for_number: checking_for_number
+                };
+            } else {
+                checking_for_number = false;
+                let numerator = expressionObj.numerator().toString();
+                let denominator = expressionObj.denominator().toString();
+
+                if (numerator !== expr && denominator !== '1') {
+                    checking_for_fractions = true;
+                    let new_Numerator = nerdamer('factor(' + numerator + ')').toString();
+                    let new_Denominator = nerdamer('factor(' + denominator + ')').toString();
+
+                    if (new_Numerator == numerator) {
+                        factorized_Numerator_final = numerator;
+                        changing_numerator = false;
+                    } else {
+                        factorized_Numerator_final = new_Numerator;
+                        changing_numerator = true;
+                    }
+
+                    if (new_Denominator == denominator) {
+                        factorized_Denominator_final = denominator;
+                        changing_denominator = false;
+                    } else {
+                        factorized_Denominator_final = new_Denominator;
+                        changing_denominator = true;
+                    }
+
+                    factorized_Expr = `(${factorized_Numerator_final})/(${factorized_Denominator_final})`;
+                } else {
+                    let nerdamer_Simplified_Expr = nerdamer('simplify(' + expressionObj + ')').toString();
+
+                    factorized_Expr = nerdamer('factor(' + nerdamer_Simplified_Expr + ')').toString();
+                    checking_for_fractions = false;
+                    if (factorized_Expr == expr) {
+                        factorized_Expr = expr;
+                        changing_exp = false;
+                    }
+                    else {
+                        changing_exp = true;
+                    }
+                }
+                console.log(factorized_Numerator_final);
+                console.log(factorized_Denominator_final);
+
+                let nerdamer_Simplified_Expr = nerdamer('simplify(' + factorized_Expr + ')').toString();
+                let math_Simplified = math.simplify(factorized_Expr).toString();
+                math_Simplified = math_Simplified.replace(/\s/g, '');
+                nerdamer_Simplified_Expr = nerdamer_Simplified_Expr !== factorized_Expr ? nerdamer_Simplified_Expr : factorized_Expr;
+                console.log(nerdamer_Simplified_Expr);
+                let algebrite_Simplified_Expr = Algebrite.simplify(nerdamer_Simplified_Expr).toString();
+                console.log(algebrite_Simplified_Expr);
+
+                if (algebrite_Simplified_Expr !== nerdamer_Simplified_Expr) {
+                    changing_exp_2 = true;
+                    simplified_Expr = algebrite_Simplified_Expr; 
+                } else {
+                    changing_exp_2 = false;
+                    simplified_Expr = nerdamer_Simplified_Expr; 
+                }
+
+                return {
+                    factorizedNumeratorMsg: factorized_Numerator_final, 
+                    factorizedDenominatorMsg: factorized_Denominator_final, 
+                    factorizedExpr: factorized_Expr, 
+                    simplifiedExpr: simplified_Expr,
+                    changing_numerator: changing_numerator,
+                    changing_denominator: changing_denominator,
+                    changing_exp: changing_exp,
+                    changing_exp_2: changing_exp_2,
+                    checking_for_fractions: checking_for_fractions,
+                    numerator: numerator,
+                    denominator: denominator,
+                    checking_for_number: checking_for_number,
+                    math_Simplified: math_Simplified
+                };
+            }
+        }
+
+        function createsolution_Steps_HTML_for_autodetect(formula, value_x, user_Formula, limitTo) {
+            var simplified_formula = user_Formula;
+            var renderedStep;
+            var html = `
+            <div>Для вычисления данного предела необходимо подставить значение \( x = ${value_x} \) в функцию 
+            <span class="mathjax-text">\\[f(x) = ${formula}\\]</span> Но сначала упростим исходный предел:</div>
+        <div class="mathjax-text">\\[
+            \\lim_{{x \\to ${limitTo}}} ${formula}\\]
+            </div>`;
+
+            const simplificationSteps = simplifyExpression_basic(user_Formula); 
+            if (simplificationSteps.checking_for_number) {
+                html += `<div>При упрощении данного предела можно сразу получить ответ:</div>`;
+                html += `<div class="mathjax-text">\\[
+                    \\lim_{{x \\to ${limitTo}}} ${formula} = \\lim_{{x \\to ${limitTo}}} ${simplificationSteps.evaluatedString} \\]</div>
+                    <div>Как извествено, предел const = const:</div>
+                <div class="mathjax-text">\\[
+                    \\lim_{{\\begin{matrix} x \\to x_0 \\\\ x \\to {\\infty} \\end{matrix}}} C = C\\]
+                    </div>
+                <div>Отсюда имеем:</div>
+                <div class="mathjax-text">\\[
+                    \\lim_{{x \\to ${limitTo}}} ${simplificationSteps.evaluatedString} = ${simplificationSteps.evaluatedString}\\]
+                    </div>
+                    `;
+            } else {
+                if (contains_Trigonometric_Function(user_Formula)) {
+                    result = calculate_Limit(user_Formula, value_x);
+                    let intermediate_formula = substituteX(user_Formula, value_x);
+                    renderedStep = format_Formula_For_MathJax(intermediate_formula);
+                    html += `
+                    <div>После упрощения подставим значение \( x = ${value_x} \):</div>
+                    <div class="mathjax-text">\\[
+                    \\lim_{{x \\to ${limitTo}}} ${renderedStep}=\\lim_{{x \\to ${limitTo}}} ${result.decimal}\\]
+                    </div>
+                    <div>Как извествено, предел const = const:</div>
+                    <div class="mathjax-text">\\[
+                    \\lim_{{\\begin{matrix} x \\to x_0 \\\\ x \\to {\\infty} \\end{matrix}}} C = C\\]
+                    </div>
+                    <div>Отсюда имеем:</div>
+                    <div class="mathjax-text">\\[
+                    \\lim_{{x \\to ${limitTo}}} ${result.decimal} = ${result.decimal}\\]
+                    </div>
+                    <div>Результат в виде обычной дроби: <span class="mathjax-text">\\[${result.fraction}\\]</span></div>
+                    <div>Результат в виде десятичной дроби: <span class="mathjax-text">\\[${result.decimal}\\]</span></div>`;
+                    return html;
+
+                    return html;
+                }
+                if (simplificationSteps.checking_for_fractions) {
+                    html += `<div>Сначала попробуем упростить числитель исходного выражения: </div>`;
+                    if (!simplificationSteps.changing_numerator) {
+                        html += `<div><b>Числитель данного выражения не нуждается в упрощении.</b></div>`;
+                    }
+                    else {
+                        renderedStep = format_Formula_For_MathJax(simplificationSteps.factorizedNumeratorMsg);
+                        html += `<div>Упрощенный числитель имеет вид:</div>
+                    <div class="mathjax-text">\\[${renderedStep}\\] </div>`;
+                    }
+                    html += `<div>Теперь попробуем упростить знаменатель исходного выражения: </div>`;
+                    if (!simplificationSteps.changing_denominator) {
+                        html += `<div><b>Знаменатель данного выражения не нуждается в упрощении.</b></div>`;
+                    }
+                    else {
+                        renderedStep = format_Formula_For_MathJax(simplificationSteps.factorizedDenominatorMsg);
+                        html += `<div>Упрощенный знаменатель имеет вид:</div>
+                    <div class="mathjax-text">\\[${renderedStep}\\] </div>`;
+                    }
+
+                    if (!simplificationSteps.changing_numerator && !simplificationSteps.changing_denominator) {
+                        html += `<div>Т.к ни числитель ни знаменатель не подверглись упрощению рассмотрим дробь целиком.</div>`;
+                        if (simplificationSteps.changing_exp_2) {
+                            html += `<div>Упрощение дроби целиком привело к данному результату:</div>`;
+                            simplified_formula = simplificationSteps.simplifiedExpr;
+                            renderedStep = format_Formula_For_MathJax(simplificationSteps.simplifiedExpr);
+                            html += `<div class="mathjax-text">\\[ \\lim_{{x \\to ${limitTo}}} ${renderedStep}\\] </div>`;
+                        } else {
+                            html += `<div>Упрощение дроби целиком не привело к изменениям</div>`;
+                        }
+                    } else {
+                        html += `<div>Упрощение числители и/или знаменятеля привели к данному результату:</div>`;
+                        renderedStep = format_Formula_For_MathJax(simplificationSteps.factorizedExpr);
+                        html += `<div class="mathjax-text">\\[ \\lim_{{x \\to ${limitTo}}} ${renderedStep}\\] </div>`;
+                        html += `<div>Теперь попробуем упростить дробь целиком.</div>`;
+                        if (simplificationSteps.changing_exp_2) {
+                            html += `<div>Упрощение дроби целиком привело к данному результату:</div>`;
+                            simplified_formula = simplificationSteps.simplifiedExpr;
+                            renderedStep = format_Formula_For_MathJax(simplificationSteps.simplifiedExpr);
+                            html += `<div class="mathjax-text">\\[ \\lim_{{x \\to ${limitTo}}} ${renderedStep}\\] </div>`;
+                        } else {
+                            html += `<div>Упрощение дроби целиком не привело к изменениям</div>`;
+                        }
+                    }
+                } else {
+                    if (simplificationSteps.changing_exp) {
+                        html += `<div>Упрощение выражения привело к данному результату:</div>`;
+                        simplified_formula = simplificationSteps.factorizedExpr;
+
+                        renderedStep = format_Formula_For_MathJax(simplificationSteps.factorizedExpr);
+                        html += `<div class="mathjax-text">\\[ \\lim_{{x \\to ${limitTo}}} ${renderedStep}\\] </div>`;
+                    } else {
+                        if (simplificationSteps.changing_exp_2) {
+                            html += `<div>Упрощение выражения привело к данному результату:</div>`;
+                            simplified_formula = simplificationSteps.simplifiedExpr;
+                            renderedStep = format_Formula_For_MathJax(simplificationSteps.simplifiedExpr);
+                            html += `<div class="mathjax-text">\\[ \\lim_{{x \\to ${limitTo}}} ${renderedStep}\\] </div>`;
+                        }
+                        else {
+                            html += `<div>Упрощение выражения не привело к изменениям</div>`;
+                        }
+                    }
+                }
+                var result = calculate_Limit(simplified_formula, value_x);
+                let intermediate_formula = substituteX(simplified_formula, value_x);
+                renderedStep = format_Formula_For_MathJax(intermediate_formula);
+                html += `
+                    <div>После упрощения подставим значение \( x = ${value_x} \):</div>
+                    <div class="mathjax-text">\\[
+                    \\lim_{{x \\to ${limitTo}}} ${renderedStep}=\\lim_{{x \\to ${limitTo}}} ${result.decimal}\\]
+                    </div>
+                    <div>Как извествено, предел const = const:</div>
+                <div class="mathjax-text">\\[
+                    \\lim_{{\\begin{matrix} x \\to x_0 \\\\ x \\to {\\infty} \\end{matrix}}} C = C\\]
+                    </div>
+                <div>Отсюда имеем:</div>
+                <div class="mathjax-text">\\[
+                    \\lim_{{x \\to ${limitTo}}} ${result.decimal} = ${result.decimal}\\]
+                    </div>
+                <div>Результат в виде обычной дроби: <span class="mathjax-text">\\[${result.fraction}\\]</span></div>
+                <div>Результат в виде десятичной дроби: <span class="mathjax-text">\\[${result.decimal}\\]</span></div>`;
+            }
+            return html;
+        }
+
+        function substituteX(expression, value_x) {
+            if (value_x === '∞' || value_x === '-∞') {
+                return expression.replace(/x/g, value_x);
+            }
+            if (value_x === 'pi') {
+                return expression.replace(/x/g, 'pi');
+            }
+            if (/^\d*\.?\d*pi$/.test(value_x)) { 
+                const coefficient = value_x.split('pi')[0] || '1'; 
+                return expression.replace(/x/g, coefficient + '*pi'); 
+            } else if (/^\d*\.?\d*pi\/\d+$/.test(value_x)) { 
+                const parts = value_x.split(/pi\//);
+                const numerator = parts[0] || '1';
+                const denominator = parts[1];
+                return expression.replace(/x/g, `(${numerator} * pi / ${denominator})`);
+            }
+            const xValueStr = String(value_x);
+            if (xValueStr.includes('/')) {
+                const parts = xValueStr.split('/');
+                const numerator = parts[0]; 
+                const denominator = parts[1]; 
+
+                // Заменяем x на форму дроби
+                return expression.replace(/x/g, `(${numerator}/${denominator})`);
+            } else {
+                return expression.replace(/(\*|\/)?(\+|-)?x/g, (match, operator, sign) => {
+                    // Если x положительное, и нет знака минус перед x
+                    if (value_x >= 0 && sign !== '-') {
+                        // Если перед x стоит оператор, ставим x в скобки
+                        return (operator ? operator + '(' : '') + (sign ? sign + xValueStr : xValueStr) + (operator ? ')' : '');
+                    }
+                    // Если x отрицательное, и знак минус перед x
+                    else if (value_x < 0 && sign === '-') {
+                        // Если перед x стоит оператор, ставим x в скобки
+                        return (operator ? operator + '(' : '') + '+' + xValueStr.substring(1) + (operator ? ')' : '');
+                    }
+                    // Если x отрицательное, но знак плюс перед x или знака нет
+                    else if (value_x < 0 && (sign === '+' || !sign)) {
+                        // Если перед x стоит оператор, ставим x в скобки
+                        return (operator ? operator + '(' : '') + '-' + xValueStr.substring(1) + (operator ? ')' : '');
+                    }
+                    // Если x положительное, но знак минус перед x
+                    else if (value_x >= 0 && sign === '-') {
+                        // Если перед x стоит оператор, ставим x в скобки
+                        return (operator ? operator + '(' : '') + sign + xValueStr + (operator ? ')' : '');
+                    }
+                });
+            }
+        }
+
+        function simplifyExpression_additionally(expr) {
+            let expressionObj = nerdamer(expr);
+            let expression_changed, new_expression;
+            let vrem = nerdamer('expand(' + expressionObj + ')').toString();
+            const max_Power = nerdamer('deg(' + vrem + ')').evaluate().text();
+
+            if (!max_Power || max_Power === 0) {
+                expression_changed = false;
+                return {
+                    expression_changed: expression_changed,
+                    new_expression: expr
+                };
+            } else {
+                expression_changed = true;
+                let divided_expression = nerdamer('divide(' + vrem + ', x^' + max_Power + ')').toString();
+                new_expression = `x^${max_Power}*(${divided_expression})`;
+                return {
+                    expression_changed: expression_changed,
+                    new_expression: new_expression,
+                    max_Power: max_Power,
+                    vrem: vrem
+                };
+            }
+        }
+
+        function simplification_whole_fraction(expr, MaxPow) {
+            let simplified_Expr;
+
+            let expressionObj = nerdamer(expr);
+            let evaluatedString = expressionObj.evaluate().toString();
+
+            if (!isNaN(parseFloat(evaluatedString)) && isFinite(evaluatedString)) {
+                checking_for_number = true;
+                return {
+                    evaluatedString: evaluatedString,
+                    checking_for_number: checking_for_number
+                };
+            } else {
+                checking_for_number = false;
+
+                let nerdamer_Multiply_Expr = nerdamer(expr).multiply('x^(-' + MaxPow + ')/x^(-' + MaxPow + ')').toString();
+                if (nerdamer_Multiply_Expr !== expr) {
+                    changing_exp_2 = true;
+                    simplified_Expr = nerdamer_Multiply_Expr; 
+                } else {
+                    changing_exp_2 = false;
+                    simplified_Expr = expr; 
+                }
+
+                return {
+                    simplifiedExpr: simplified_Expr, 
+                    changing_exp_2: changing_exp_2,
+                    checking_for_number: checking_for_number
+                };
+            }
+        }
+
+        const simplification_methods = `<br> Обычно, для упрощения выражений применяются несколько способов:
+                            <ul>
+                                <li>использование формул сокращённого умножения — это включает применение известных формул, таких как квадрат суммы, квадрат разности, разность квадратов, куб суммы, куб разности и т.д.;</li>
+                                <li>разложение на множители — метод, который заключается в представлении выражения в виде произведения более простых многочленов. Это может включать вынесение общего множителя за скобки, использование метода группировки или специальных техник разложения, таких как разложение по дискриминанту (квадратное уравнение);</li>
+                                <li>рационализация — процесс преобразования дроби таким образом, чтобы избавиться от неопределённостей вида 0/0 или ∞/∞ если есть корни, особенно полезен при наличии иррациональных чисел или выражений;</li>
+                                <li>применение тригонометрических тождеств — для упрощения выражений, содержащих тригонометрические функции, используются основные тождества, такие как синус и косинус суммы и разности углов, тождества преобразования произведения в сумму и др.;</li>
+                                <li>использование свойств логарифмов и экспонент — при упрощении выражений с логарифмами и экспонентами применяются их основные свойства, такие как правила произведения, частного, степени и перехода к новому основанию;</li>
+                                <li>суммирование и дробление сложных выражений — иногда выражение можно упростить, сложив или разложив его на более мелкие части;</li>
+                                <li>тождественные преобразования — включают в себя использование эквивалентных преобразований для упрощения выражений без изменения их значений;</li>
+                                <li>и другие методы.</li>
+                            </ul>`;
+        const abbreviated_multiplication_formulas = `<br> К формулам сокращённого умножения можно отнести:
+                            <ol>
+                                <li>Разность квадратов: a<sup>2</sup>-b<sup>2</sup>=(a-b)(a+b);</li>
+                                <li>Квадрат суммы двух чисел: (a+b)<sup>2</sup>=a<sup>2</sup>+2*a*b+b<sup>2</sup>;</li>
+                                <li>Квадрат разности двух чисел: (a-b)<sup>2</sup>=a<sup>2</sup>-2*a*b+b<sup>2</sup>;</li>
+                                <li>Сумма кубов: a<sup>3</sup>+b<sup>3</sup>=(a+b)(a<sup>2</sup>-a*b+b<sup>2</sup>);</li>
+                                <li>Разность кубов: a<sup>3</sup>-b<sup>3</sup>=(a-b)(a<sup>2</sup>+a*b+b<sup>2</sup>);</li>
+                                <li>Куб суммы двух чисел: (a+b)<sup>3</sup>=a<sup>3</sup>+3*a<sup>2</sup>*b+3*a*b<sup>2</sup>+b<sup>3</sup>;</li>
+                                <li>Куб разности двух чисел: (a-b)<sup>3</sup>=a<sup>3</sup>-3*a<sup>2</sup>*b+3*a*b<sup>2</sup>-b<sup>3</sup>.</li>
+                            </ol>`;
+        const factorization = `<br> Рассмотрим метод разложения на множители. Существует 5 основных способов разложения многочлена на множители:
+                            <ul>
+                                <li>вынесение общего множителя за скобки;</li>
+                                <li>использование формул сокращенного умножения;</li>
+                                <li>метод группировки;</li>
+                                <li>метод выделения полного квадрата;</li>
+                                <li>разложение квадратного трехчлена на множители.</li>
+                            </ul>
+                            Разберём каждый из способов подробнее:
+                            <br><b>Вынесение общего множителя за скобки</b>
+                            <br>Данный метод прощего всего рассмотреть наглядно. Попробуем вынести общий множитель в данном выражении: 4x<sup>2</sup>+x.
+                            <br>Общий множитель в данном случае - это переменная x. Вынесем её за скобки: x(4x+1).
+                            <br>В общем виде данный способ можно записать так: c*a+c*b=c*(a+b).
+                            <br><b>Использование формул сокращенного умножения</b>
+                            ${abbreviated_multiplication_formulas}
+                            <br><b>Метод группировки</b>
+                            <br>Применяется если преобразование не очевидно. Для группировки необходимо найти подгруппы слагаемых, имеющих общие делители и переставить их так, чтобы из каждой группы можно было получить один и тот же множитель. Данный метод прощего всего рассмотреть наглядно. Для примера возьмём выражение: x<sup>3</sup>+x+2.
+                            <br>Чтобы применить метод группировки добавим ещё два одночлена +x<sup>2</sup> и -x<sup>2</sup> (как можно заметить они "уничтожат" сами себя) и разложим x как 2x-x. Получим: x<sup>3</sup>+x<sup>2</sup>-x<sup>2</sup>+2x-x+2. Переставим одночлены местами, чтобы было нагляднее: x<sup>3</sup>+x<sup>2</sup>-x<sup>2</sup>-x+2x+2.
+                            <br>Теперь можно приступить к группировке. Сначала разберём первый множитель: x<sup>3</sup>+x<sup>2</sup>. Здесь за скобки можно вынести x<sup>2</sup>: x<sup>2</sup>*(x+1).
+                            <br>После разберём множитель -x<sup>2</sup>-x. Здесь за скобки можно вынести -x: -x*(x+1).
+                            <br>Наконец разберём множитель 2x+2. Здесь за скобки можно вынести 2: 2*(x+1).
+                            <br>Исходя из данных действий мы получили обновлённое выражение: x<sup>2</sup>*(x+1)-x*(x+1)+2*(x+1). Теперь можно увидеть, что общий множитель это (x+1). Вынесем его за скобки: (x+1)*(x<sup>2</sup>-x+2).
+                            <br><b>Метод выделения полного квадрата</b>
+                            <br>В данном методе можно преобразовать многочлен и привести к виду разности квадратов и применить формулу сокращенного умножения. Возьмём за пример выражение x<sup>4</sup>-4x<sup>2</sup>-1.
+                            <br>Распишем 4x<sup>2</sup> как 2*2*x<sup>2</sup> и добавим в выражение -4+4. Получим: x<sup>4</sup>-4x<sup>2</sup>-1 = x<sup>4</sup>-2*2*x<sup>2</sup>+4-4-1. 
+                            <br>В обновлённом выражении нужно уделить внимание многочлену x<sup>4</sup>-2*2*x<sup>2</sup>+4, который позволяет применить формулу квадрата разности (a+b)<sup>2</sup>=a<sup>2</sup>+2*a*b+b<sup>2</sup>, где a=x<sup>2</sup>, b=2.
+                            <br>Применим данную формулу: x<sup>4</sup>-2*2*x<sup>2</sup>+4-4-1 = (x<sup>2</sup>-2)<sup>2</sup>-5. Теперь можно применить другую формулу сокращённого умножения: a<sup>2</sup>-b<sup>2</sup>=(a-b)(a+b), где a=(x<sup>2</sup>-2), b=&radic;5.
+                            <br>Итоговый результат упрощения: (x<sup>2</sup>-2-&radic;5)*(x<sup>2</sup>-2+&radic;5).
+                            <br><b>Разложение квадратного трехчлена на множители</b>
+                            <br>Квадратный трехчлен – многочлен вида ax<sup>2</sup>+bx+c = 0. В данном методе поможет теорема:
+                            <p>Теорема. Если квадратное уравнение ax<sup>2</sup>+bx+c = 0 имеет корни x<sub>1</sub>, x<sub>2</sub>, то его можно записать в виде: ax<sup>2</sup>+bx+c = a(x-x<sub>1</sub>)(x-x<sub>2</sub>).</p>
+                            `;
+        const rationalization_denominator = `<br> Разберём метод рационализации. Заключатся он в том, чтобы избавиться от корней, если в пределе возникают неопределённости видов 0/0 или ∞/∞. Чаще всего всё сводится к применению формул сокращённого умножения. ${abbreviated_multiplication_formulas}
+                            <br>Для наглядностии рассмотрим выражение: <span class="mathjax-text">\\[\\frac{\\sqrt{2-x}-1}{\\sqrt{5-x}-2}\\]</span>Если оно встретится в пределе, где x стремится к 1, то получится неопределённость вида 0/0. Для того, чтобы избавиться от неопределённости, нужно упростить данное выражения. Для этого числитель:<span class="mathjax-text">\\[\\sqrt{2-x}-1\\]</span>Домножить на:<span class="mathjax-text">\\[(\\sqrt{2-x}+1)(\\sqrt{5-x}+2)\\]</span>
+                            И знаменатель: <span class="mathjax-text">\\[\\sqrt{5-x}-2\\]</span>Домножить на: <span class="mathjax-text">\\[(\\sqrt{2-x}+1)(\\sqrt{5-x}+2)\\]</span>
+                            Как можно заметить, что изначальную дробь мы никак не изменили, т.к новые множители сокращаются, оставляя исходную дробь. Выполнение данных действий было необходимо для применения формулы разности квадратов: a<sup>2</sup>-b<sup>2</sup>=(a-b)(a+b). Запишем новую дробь и применим формулу сокращённого умножения:
+                            <span class="mathjax-text">\\[\\frac{\\sqrt{2-x}-1}{\\sqrt{5-x}-2}=\\frac{(\\sqrt{2-x}-1)(\\sqrt{2-x}+1)(\\sqrt{5-x}+2)}{(\\sqrt{5-x}-2)(\\sqrt{2-x}+1)(\\sqrt{5-x}+2)}=\\]</span>
+                            <span class="mathjax-text">\\[=\\frac{(\\sqrt{2-x})^2-1^2)(\\sqrt{5-x}+2)}{(\\sqrt{5-x})^2-2^2)(\\sqrt{2-x}+1)}=\\frac{(2-x-1)(\\sqrt{5-x}+2)}{(5-x-4)(\\sqrt{2-x}+1)}=\\]</span>
+                            <span class="mathjax-text">\\[=\\frac{(1-x)(\\sqrt{5-x}+2)}{(1-x)(\\sqrt{2-x}+1)}=\\frac{\\sqrt{5-x}+2}{\\sqrt{2-x}+1}\\]</span>
+                            Теперь, если подставить 1 вместо x то неопределённости вида 0/0 не будет, а ответ в данном случае: 4/2 = 2.`;
+
+        function createsolution_Steps_HTML_for_uncertainty(formula, value_x, user_Formula, limitTo) {
+            var simplified_formula = user_Formula;
+            var renderedStep, decomposed_numerator, decomposed_denominator, example_changed, final_simplification, html;
+            var result, simplificationSteps_intermediate;
+            const simplificationSteps = simplifyExpression_basic(user_Formula);
+            if (simplificationSteps.checking_for_number) {
+                html = `<div>При упрощении данного предела можно сразу получить ответ:</div>`;
+                html += `<div class="mathjax-text">\\[
+                    \\lim_{{x \\to ${limitTo}}} ${formula} = \\lim_{{x \\to ${limitTo}}} ${simplificationSteps.evaluatedString} \\]</div>
+                    <div>Как извествено, предел const = const:</div>
+                <div class="mathjax-text">\\[
+                    \\lim_{{\\begin{matrix} x \\to x_0 \\\\ x \\to {\\infty} \\end{matrix}}} C = C\\]
+                    </div>
+                <div>Отсюда имеем:</div>
+                <div class="mathjax-text">\\[
+                    \\lim_{{x \\to ${limitTo}}} ${simplificationSteps.evaluatedString} = ${simplificationSteps.evaluatedString}\\]
+                    </div>`;
+                return html;
+            } else {
+                if (!simplificationSteps.checking_for_fractions) {
+                    html = `
+                    <div>Вы неверно определили тип предела, пожалуйста, будьте внимательнее.</div>`;
+                } else {
+                    //Вычисленные числитель и знаменатель
+                    let calculated_numerator = calculate_Limit(simplificationSteps.numerator, value_x).decimal;
+                    let calculated_denominator = calculate_Limit(simplificationSteps.denominator, value_x).decimal;
+                    //Подставлено в числитель и знаменатель
+                    let substituted_into_numerator = substituteX(simplificationSteps.numerator, value_x);
+                    let substituted_into_denominator = substituteX(simplificationSteps.denominator, value_x);
+                    //Обработанные числитель и знаменатель
+                    let render_numerator = format_Formula_For_MathJax(simplificationSteps.numerator);
+                    let render_denominator = format_Formula_For_MathJax(simplificationSteps.denominator);
+                    //Обработанные подставленные в числитель и знаменатель
+                    let render_substituted_into_numerator = format_Formula_For_MathJax(substituted_into_numerator);
+                    let render_substituted_into_denominator = format_Formula_For_MathJax(substituted_into_denominator);
+
+                    html = `
+                    <div>Первым шагом при вычислении такого вида пределов следует проверить, существуют ли неопределённости вида 0/0 или ∞/∞. Для этого необходимо подставить значение \( x = ${value_x} \) в функцию 
+                    <span class="mathjax-text">\\[f(x) = ${formula}\\]</span>Проверим существование неопределённости:</div>
+                    <div class="mathjax-text">\\[
+                    \\lim_{{x \\to ${limitTo}}} ${formula} = \\lim_{{x \\to ${limitTo}}} \\frac{${render_numerator}}{${render_denominator}} = 
+                    \\lim_{{x \\to ${limitTo}}} \\frac{${render_substituted_into_numerator}}{${render_substituted_into_denominator}} =
+                    \\lim_{{x \\to ${limitTo}}} \\frac{${calculated_numerator}}{${calculated_denominator}}\\]
+                    </div>`;
+                    if (calculated_numerator === '∞' && calculated_denominator === '∞') {
+                        html += `Данный предел относится к одному из основных видов неопределённостей: ∞/∞.`;
+                    } else if (calculated_numerator === '0' && calculated_denominator === '0') {
+                        html += `Данный предел относится к одному из основных видов неопределённостей: 0/0.`;
+                    } else if (calculated_numerator === '-∞' && calculated_denominator === '-∞') {
+                        html += `Данный предел относится к одному из основных видов неопределённостей: ∞/∞.`;
+                    } else {
+                        html += `<div><b>Неопределённости в данном пределе нет.</b></div><div>Попробуем упростить числитель исходного выражения.<p align="center"><b>Начало теоретического материала</b></p><br>${simplification_methods} <br>Рассмотрим подробнее два из них: формулы сокращённого умножения и Рационализация.${abbreviated_multiplication_formulas}${rationalization_denominator}           
+                <br><p align="center"><b>Конец теоретического материала</b></p><br>Приступим к упрощению числителя: </div>`;
+                        if (!simplificationSteps.changing_numerator) {
+                            html += `<div><b>Числитель данного выражения не нуждается в упрощении.</b></div>`;
+                        }
+                        else {
+                            renderedStep = format_Formula_For_MathJax(simplificationSteps.factorizedNumeratorMsg);
+                            html += `<div>Упрощенный числитель имеет вид:</div>
+                            <div class="mathjax-text">\\[${renderedStep}\\] </div>`;
+                        }
+
+                        html += `<div>Теперь попробуем упростить знаменатель исходного выражения: </div>`;
+                        if (!simplificationSteps.changing_denominator) {
+                            html += `<div><b>Знаменатель данного выражения не нуждается в упрощении.</b></div>`;
+                        }
+                        else {
+                            renderedStep = format_Formula_For_MathJax(simplificationSteps.factorizedDenominatorMsg);
+                            html += `<div>Упрощенный знаменатель имеет вид:</div>
+                            <div class="mathjax-text">\\[${renderedStep}\\] </div>`;
+                        }
+
+                        if (!simplificationSteps.changing_numerator && !simplificationSteps.changing_denominator) {
+                            html += `<div>Т.к ни числитель ни знаменатель не подверглись упрощению рассмотрим дробь целиком.</div>`;
+                            if (simplificationSteps.changing_exp_2) {
+                                html += `<div>Упрощение дроби целиком привело к данному результату:</div>`;
+                                simplified_formula = simplificationSteps.simplifiedExpr;
+                                renderedStep = format_Formula_For_MathJax(simplificationSteps.simplifiedExpr);
+                                html += `<div class="mathjax-text">\\[ \\lim_{{x \\to ${limitTo}}} ${renderedStep}\\] </div>`;
+                            } else {
+                                html += `<div>Упрощение дроби целиком не привело к изменениям</div>`;
+                            }
+                        } else {
+                            html += `<div>Упрощение числители и/или знаменятеля привели к данному результату:</div>`;
+                            renderedStep = format_Formula_For_MathJax(simplificationSteps.factorizedExpr);
+                            html += `<div class="mathjax-text">\\[ \\lim_{{x \\to ${limitTo}}} ${renderedStep}\\] </div>`;
+                            html += `<div>Теперь попробуем упростить дробь целиком.</div>`;
+                            if (simplificationSteps.changing_exp_2) {
+                                html += `<div>Упрощение дроби целиком привело к данному результату:</div>`;
+                                simplified_formula = simplificationSteps.simplifiedExpr;
+                                renderedStep = format_Formula_For_MathJax(simplificationSteps.simplifiedExpr);
+                                html += `<div class="mathjax-text">\\[ \\lim_{{x \\to ${limitTo}}} ${renderedStep}\\] </div>`;
+                            } else {
+                                html += `<div><b>Упрощение дроби целиком не привело к изменениям</b></div>`;
+                            }
+                        }
+                        result = calculate_Limit(simplified_formula, value_x);
+                        let intermediate_formula = substituteX(simplified_formula, value_x);
+                        renderedStep = format_Formula_For_MathJax(intermediate_formula);
+                        html += `
+                        <div>После упрощения подставим значение \( x = ${value_x} \):</div>
+                        <div class="mathjax-text">\\[
+                        \\lim_{{x \\to ${limitTo}}} ${renderedStep}=\\lim_{{x \\to ${limitTo}}} ${result.decimal}\\]
+                        </div>
+                        <div>Как извествено, предел const = const:</div>
+                        <div class="mathjax-text">\\[
+                        \\lim_{{\\begin{matrix} x \\to x_0 \\\\ x \\to {\\infty} \\end{matrix}}} C = C\\]
+                        </div>
+                        <div>Отсюда имеем:</div>
+                        <div class="mathjax-text">\\[
+                        \\lim_{{x \\to ${limitTo}}} ${result.decimal} = ${result.decimal}\\]
+                        </div>
+                        <div>Результат в виде обычной дроби: <span class="mathjax-text">\\[${result.fraction}\\]</span></div>
+                        <div>Результат в виде десятичной дроби: <span class="mathjax-text">\\[${result.decimal}\\]</span></div>`;
+                        return html;
+                    }
+
+                    html += `<div>Сначала попробуем упростить числитель исходного выражения.<p align="center"><b>Начало теоретического материала</b></p>${simplification_methods} <br>Рассмотрим подробнее два из них: формулы сокращённого умножения и разложение на множители.${abbreviated_multiplication_formulas}${factorization}<p align="center"><b>Конец теоретического материала</b></p>           
+                            <br>Приступим к упрощению числителя: </div>`;
+                    if (!simplificationSteps.changing_numerator) {
+                        html += `<div><b>Числитель данного выражения не нуждается в упрощении.</b></div>`;
+                    }
+                    else {
+                        renderedStep = format_Formula_For_MathJax(simplificationSteps.factorizedNumeratorMsg);
+                        html += `<div>Упрощенный числитель имеет вид:</div>
+                            <div class="mathjax-text">\\[${renderedStep}\\] </div>`;
+                    }
+
+                    html += `<div>Теперь попробуем упростить знаменатель исходного выражения: </div>`;
+                    if (!simplificationSteps.changing_denominator) {
+                        html += `<div><b>Знаменатель данного выражения не нуждается в упрощении.</b></div>`;
+                    }
+                    else {
+                        renderedStep = format_Formula_For_MathJax(simplificationSteps.factorizedDenominatorMsg);
+                        html += `<div>Упрощенный знаменатель имеет вид:</div>
+                            <div class="mathjax-text">\\[${renderedStep}\\] </div>`;
+                    }
+
+                    if (!simplificationSteps.changing_numerator && !simplificationSteps.changing_denominator) {
+                        html += `<div>Т.к ни числитель ни знаменатель не подверглись упрощению рассмотрим дробь целиком.</div>`;
+                        if (simplificationSteps.changing_exp_2) {
+                            html += `<div>Упрощение дроби целиком привело к данному результату:</div>`;
+                            simplified_formula = simplificationSteps.simplifiedExpr;
+                            renderedStep = format_Formula_For_MathJax(simplificationSteps.simplifiedExpr);
+                            html += `<div class="mathjax-text">\\[ \\lim_{{x \\to ${limitTo}}} ${renderedStep}\\] </div>`;
+                            simplificationSteps_intermediate = simplifyExpression_basic(simplified_formula);
+                            if (simplificationSteps_intermediate.checking_for_fractions) {
+                                html += `<div>Проверим, удалось ли избавиться от неопределённости:</div>`;
+                                //Вычисленные числитель и знаменатель
+                                calculated_numerator = calculate_Limit(simplificationSteps_intermediate.factorizedNumeratorMsg, value_x).decimal;
+                                calculated_denominator = calculate_Limit(simplificationSteps_intermediate.factorizedDenominatorMsg, value_x).decimal;
+                                //Подставлено в числитель и знаменатель
+                                substituted_into_numerator = substituteX(simplificationSteps_intermediate.factorizedNumeratorMsg, value_x);
+                                substituted_into_denominator = substituteX(simplificationSteps_intermediate.factorizedDenominatorMsg, value_x);
+                                //Обработанные числитель и знаменатель
+                                render_numerator = format_Formula_For_MathJax(simplificationSteps_intermediate.factorizedNumeratorMsg);
+                                render_denominator = format_Formula_For_MathJax(simplificationSteps_intermediate.factorizedDenominatorMsg);
+                                //Обработанные подставленные в числитель и знаменатель
+                                render_substituted_into_numerator = format_Formula_For_MathJax(substituted_into_numerator);
+                                render_substituted_into_denominator = format_Formula_For_MathJax(substituted_into_denominator);
+                                html += `<div class="mathjax-text">\\[
+                                \\lim_{{x \\to ${limitTo}}} ${formula} = \\lim_{{x \\to ${limitTo}}} \\frac{${render_numerator}}{${render_denominator}} = 
+                                \\lim_{{x \\to ${limitTo}}} \\frac{${render_substituted_into_numerator}}{${render_substituted_into_denominator}} =
+                                \\lim_{{x \\to ${limitTo}}} \\frac{${calculated_numerator}}{${calculated_denominator}}\\]
+                                </div>`;
+                                if ((calculated_numerator === '∞' && calculated_denominator === '∞') || (calculated_numerator === '0' && calculated_denominator === '0') || (calculated_numerator === '-∞' && calculated_denominator === '-∞')) {
+                                    html += `<div>Пока что избавиться от неопределённости не удалось. Попробуем применить другой способ, а именно разложение на множители, где какой-либо общий множиель выносится за скобку. Рассмотрим сначала числитель:<div>`;
+                                    decomposed_numerator = simplifyExpression_additionally(simplificationSteps_intermediate.factorizedNumeratorMsg);
+                                    decomposed_denominator = simplifyExpression_additionally(simplificationSteps_intermediate.factorizedDenominatorMsg);
+                                    let new_render_numerator = format_Formula_For_MathJax(decomposed_numerator.new_expression);
+                                    let new_render_denominator = format_Formula_For_MathJax(decomposed_denominator.new_expression);
+                                    let new_render_numerator_vrem = format_Formula_For_MathJax(decomposed_numerator.vrem);
+                                    let new_render_denominator_vrem = format_Formula_For_MathJax(decomposed_denominator.vrem);
+
+                                    example_changed = decomposed_numerator.expression_changed;
+                                    let Max_Pow = (decomposed_numerator.max_Power > decomposed_denominator.max_Power) ? decomposed_numerator.max_Power : decomposed_denominator.max_Power;
+
+                                    if (example_changed) {
+                                        html += `<div class="mathjax-text">\\[
+                                        ${render_numerator}=${new_render_numerator_vrem}=${new_render_numerator}\\]
+                                        </div>`;
+                                    }
+                                    else {
+                                        html += `<div>В данном числителе менять что-либо нецелесообразно.<div>`;
+                                    }
+
+                                    example_changed = decomposed_denominator.expression_changed;
+                                    html += `<div>Теперь рассмотрим знаменатель:<div>`;
+                                    if (example_changed) {
+                                        html += `<div class="mathjax-text">\\[
+                                        ${render_denominator}=${new_render_denominator_vrem}=${new_render_denominator}\\]
+                                        </div>`;
+                                    }
+                                    else {
+                                        html += `<div>В данном знаменателе менять что-либо нецелесообразно.<div>`;
+                                    }
+                                    html += `<div>Рассмотрим дробь целиком.<div>`;
+                                    let collected_fraction = `(${decomposed_numerator.new_expression})/(${decomposed_denominator.new_expression})`;
+                                    final_simplification = simplification_whole_fraction(collected_fraction, Max_Pow);
+
+                                    if (final_simplification.checking_for_number) {
+                                        html = `<div>При упрощении данной дроби можно сразу получить ответ:</div>`;
+                                        html += `<div class="mathjax-text">\\[
+                                        \\lim_{{x \\to ${limitTo}}} ${formula} = \\lim_{{x \\to ${limitTo}}} ${final_simplification.evaluatedString} \\]</div>
+                                        <div>Как извествено, предел const = const:</div>
+                                        <div class="mathjax-text">\\[
+                                        \\lim_{{\\begin{matrix} x \\to x_0 \\\\ x \\to {\\infty} \\end{matrix}}} C = C\\]
+                                        </div>
+                                        <div>Отсюда имеем:</div>
+                                        <div class="mathjax-text">\\[
+                                        \\lim_{{x \\to ${limitTo}}} ${final_simplification.evaluatedString} = ${final_simplification.evaluatedString}\\]
+                                        </div>`;
+                                        return html;
+                                    } else {
+                                        simplified_formula = final_simplification.simplifiedExpr;
+                                        result = calculate_Limit(simplified_formula, value_x);
+                                        let new_renderstep = nerdamer(final_simplification.simplifiedExpr);
+                                        new_renderstep = new_renderstep.toTeX();
+                                        html += `<div>Результат упрощения дроби:<div>
+                                            <div class="mathjax-text">\\[
+                                        \\lim_{{x \\to ${limitTo}}} ${renderedStep} = \\lim_{{x \\to ${limitTo}}} ${new_renderstep} \\]</div>`;
+                                        let intermediate_formula = substituteX(simplified_formula, value_x);
+                                        renderedStep = format_Formula_For_MathJax(intermediate_formula);
+                                        html += `
+                                        <div>После упрощения подставим значение \( x = ${value_x} \):</div>
+                                        <div class="mathjax-text">\\[
+                                        \\lim_{{x \\to ${limitTo}}} ${renderedStep}=\\lim_{{x \\to ${limitTo}}} ${result.decimal}\\]
+                                        </div>
+                                        <div>Как извествено, предел const = const:</div>
+                                        <div class="mathjax-text">\\[
+                                        \\lim_{{\\begin{matrix} x \\to x_0 \\\\ x \\to {\\infty} \\end{matrix}}} C = C\\]
+                                        </div>
+                                        <div>Отсюда имеем:</div>
+                                        <div class="mathjax-text">\\[
+                                        \\lim_{{x \\to ${limitTo}}} ${result.decimal} = ${result.decimal}\\]
+                                        </div>
+                                        <div>Результат в виде обычной дроби: <span class="mathjax-text">\\[${result.fraction}\\]</span></div>
+                                        <div>Результат в виде десятичной дроби: <span class="mathjax-text">\\[${result.decimal}\\]</span></div>`;
+                                        return html;
+                                    }
+                                } else {
+                                    html += `<div><b>Избавиться от неопределённости удалось, поэтому можно приступить к вычислению предела.</b></div>`;
+                                    result = calculate_Limit(simplified_formula, value_x);
+                                    let intermediate_formula = substituteX(simplified_formula, value_x);
+                                    renderedStep = format_Formula_For_MathJax(intermediate_formula);
+                                    html += `
+                                    <div>После упрощения подставим значение \( x = ${value_x} \):</div>
+                                    <div class="mathjax-text">\\[
+                                    \\lim_{{x \\to ${limitTo}}} ${renderedStep}=\\lim_{{x \\to ${limitTo}}} ${result.decimal}\\]
+                                    </div>
+                                    <div>Как извествено, предел const = const:</div>
+                                    <div class="mathjax-text">\\[
+                                    \\lim_{{\\begin{matrix} x \\to x_0 \\\\ x \\to {\\infty} \\end{matrix}}} C = C\\]
+                                    </div>
+                                    <div>Отсюда имеем:</div>
+                                    <div class="mathjax-text">\\[
+                                    \\lim_{{x \\to ${limitTo}}} ${result.decimal} = ${result.decimal}\\]
+                                    </div>
+                                    <div>Результат в виде обычной дроби: <span class="mathjax-text">\\[${result.fraction}\\]</span></div>
+                                    <div>Результат в виде десятичной дроби: <span class="mathjax-text">\\[${result.decimal}\\]</span></div>`;
+                                    return html;
+                                }
+                            } else {
+                                html += `<div>Приступим к вычислению предела.</div>`;
+                                result = calculate_Limit(simplified_formula, value_x);
+                                let intermediate_formula = substituteX(simplified_formula, value_x);
+                                renderedStep = format_Formula_For_MathJax(intermediate_formula);
+                                html += `
+                                    <div>После упрощения подставим значение \( x = ${value_x} \):</div>
+                                    <div class="mathjax-text">\\[
+                                    \\lim_{{x \\to ${limitTo}}} ${renderedStep}=\\lim_{{x \\to ${limitTo}}} ${result.decimal}\\]
+                                    </div>
+                                    <div>Как извествено, предел const = const:</div>
+                                    <div class="mathjax-text">\\[
+                                    \\lim_{{\\begin{matrix} x \\to x_0 \\\\ x \\to {\\infty} \\end{matrix}}} C = C\\]
+                                    </div>
+                                    <div>Отсюда имеем:</div>
+                                    <div class="mathjax-text">\\[
+                                    \\lim_{{x \\to ${limitTo}}} ${result.decimal} = ${result.decimal}\\]
+                                    </div>
+                                    <div>Результат в виде обычной дроби: <span class="mathjax-text">\\[${result.fraction}\\]</span></div>
+                                    <div>Результат в виде десятичной дроби: <span class="mathjax-text">\\[${result.decimal}\\]</span></div>`;
+                                return html;
+                            }
+                        } else {
+                            html += `<div>Упрощение дроби целиком не привело к изменениям</div>`;
+                            html += `<div>Попробуем применить другой способ, а именно разложение на множители, где какой-либо общий множиель выносится за скобку. Рассмотрим сначала числитель:<div>`;
+                            decomposed_numerator = simplifyExpression_additionally(simplificationSteps_intermediate.factorizedNumeratorMsg);
+                            decomposed_denominator = simplifyExpression_additionally(simplificationSteps_intermediate.factorizedDenominatorMsg);
+                            let new_render_numerator = format_Formula_For_MathJax(decomposed_numerator.new_expression);
+                            let new_render_denominator = format_Formula_For_MathJax(decomposed_denominator.new_expression);
+                            let new_render_numerator_vrem = format_Formula_For_MathJax(decomposed_numerator.vrem);
+                            let new_render_denominator_vrem = format_Formula_For_MathJax(decomposed_denominator.vrem);
+
+                            example_changed = decomposed_numerator.expression_changed;
+                            let Max_Pow = (decomposed_numerator.max_Power > decomposed_denominator.max_Power) ? decomposed_numerator.max_Power : decomposed_denominator.max_Power;
+                            if (example_changed) {
+                                html += `<div class="mathjax-text">\\[
+                                        ${render_numerator}=${new_render_numerator_vrem}=${new_render_numerator}\\]
+                                        </div>`;
+                            }
+                            else {
+                                html += `<div>В данном числителе менять что-либо нецелесообразно.<div>`;
+                            }
+
+                            example_changed = decomposed_denominator.expression_changed;
+                            html += `<div>Теперь рассмотрим знаменатель:<div>`;
+                            if (example_changed) {
+                                html += `<div class="mathjax-text">\\[
+                                        ${render_denominator}=${new_render_denominator_vrem}=${new_render_denominator}\\]
+                                        </div>`;
+                            }
+                            else {
+                                html += `<div>В данном знаменателе менять что-либо нецелесообразно.<div>`;
+                            }
+                            html += `<div>Рассмотрим дробь целиком.<div>`;
+                            let collected_fraction = `(${decomposed_numerator.new_expression})/(${decomposed_denominator.new_expression})`;
+                            final_simplification = simplification_whole_fraction(collected_fraction, Max_Pow);
+                            if (final_simplification.checking_for_number) {
+                                html = `<div>При упрощении данной дроби можно сразу получить ответ:</div>`;
+                                html += `<div class="mathjax-text">\\[
+                                        \\lim_{{x \\to ${limitTo}}} ${formula} = \\lim_{{x \\to ${limitTo}}} ${final_simplification.evaluatedString} \\]</div>
+                                        <div>Как извествено, предел const = const:</div>
+                                        <div class="mathjax-text">\\[
+                                        \\lim_{{\\begin{matrix} x \\to x_0 \\\\ x \\to {\\infty} \\end{matrix}}} C = C\\]
+                                        </div>
+                                        <div>Отсюда имеем:</div>
+                                        <div class="mathjax-text">\\[
+                                        \\lim_{{x \\to ${limitTo}}} ${final_simplification.evaluatedString} = ${final_simplification.evaluatedString}\\]
+                                        </div>`;
+                                return html;
+                            } else {
+                                simplified_formula = final_simplification.simplifiedExpr;
+                                result = calculate_Limit(simplified_formula, value_x);
+                                let new_renderstep = nerdamer(final_simplification.simplifiedExpr);
+                                new_renderstep = new_renderstep.toTeX();
+
+                                html += `<div>Результат упрощения дроби:<div>
+                                            <div class="mathjax-text">\\[
+                                        \\lim_{{x \\to ${limitTo}}} ${renderedStep} = \\lim_{{x \\to ${limitTo}}} ${new_renderstep} \\]</div>`;
+                                let intermediate_formula = substituteX(simplified_formula, value_x);
+                                renderedStep = format_Formula_For_MathJax(intermediate_formula);
+                                html += `
+                                        <div>После упрощения подставим значение \( x = ${value_x} \):</div>
+                                        <div class="mathjax-text">\\[
+                                        \\lim_{{x \\to ${limitTo}}} ${renderedStep}=\\lim_{{x \\to ${limitTo}}} ${result.decimal}\\]
+                                        </div>
+                                        <div>Как извествено, предел const = const:</div>
+                                        <div class="mathjax-text">\\[
+                                        \\lim_{{\\begin{matrix} x \\to x_0 \\\\ x \\to {\\infty} \\end{matrix}}} C = C\\]
+                                        </div>
+                                        <div>Отсюда имеем:</div>
+                                        <div class="mathjax-text">\\[
+                                        \\lim_{{x \\to ${limitTo}}} ${result.decimal} = ${result.decimal}\\]
+                                        </div>
+                                        <div>Результат в виде обычной дроби: <span class="mathjax-text">\\[${result.fraction}\\]</span></div>
+                                        <div>Результат в виде десятичной дроби: <span class="mathjax-text">\\[${result.decimal}\\]</span></div>`;
+                                return html;
+                            }
+                        }
+                    } else {
+                        html += `<div>Упрощение числители и/или знаменятеля привели к данному результату:</div>`;
+                        let dop_numerator = simplifyExpression_basic(simplificationSteps.factorizedNumeratorMsg);
+                        let dop_denomerator = simplifyExpression_basic(simplificationSteps.factorizedDenominatorMsg);
+                        let prom = `(${dop_numerator.factorizedExpr})/(${dop_denomerator.factorizedExpr})`;
+                        let vrem;
+                        renderedStep = format_Formula_For_MathJax(prom);
+                        html += `<div class="mathjax-text">\\[ \\lim_{{x \\to ${limitTo}}} ${renderedStep}\\] </div>`;
+                        html += `<div>Теперь попробуем упростить дробь целиком.</div>`;
+                        if (simplificationSteps.changing_exp_2) {
+                            html += `<div>Упрощение дроби целиком привело к данному результату:</div>`;
+                            simplified_formula = simplificationSteps.simplifiedExpr;
+                            vrem = simplifyExpression_basic(simplified_formula);
+                            dop_numerator = simplifyExpression_basic(vrem.numerator);
+                            dop_denomerator = simplifyExpression_basic(vrem.denominator);
+                            prom = `(${dop_numerator.factorizedExpr})/(${dop_denomerator.factorizedExpr})`;
+
+                            renderedStep = format_Formula_For_MathJax(prom);
+                            html += `<div class="mathjax-text">\\[ \\lim_{{x \\to ${limitTo}}} ${renderedStep}\\] </div>`;
+                            simplificationSteps_intermediate = simplifyExpression_basic(simplified_formula);
+                            if (simplificationSteps_intermediate.checking_for_fractions) {
+                                html += `<div>Проверим, удалось ли избавиться от неопределённости:</div>`;
+                                //Вычисленные числитель и знаменатель
+                                calculated_numerator = calculate_Limit(simplificationSteps_intermediate.factorizedNumeratorMsg, value_x).decimal;
+                                calculated_denominator = calculate_Limit(simplificationSteps_intermediate.factorizedDenominatorMsg, value_x).decimal;
+                                //Подставлено в числитель и знаменатель
+                                substituted_into_numerator = substituteX(simplificationSteps_intermediate.factorizedNumeratorMsg, value_x);
+                                substituted_into_denominator = substituteX(simplificationSteps_intermediate.factorizedDenominatorMsg, value_x);
+                                //Обработанные числитель и знаменатель
+                                render_numerator = format_Formula_For_MathJax(simplificationSteps_intermediate.factorizedNumeratorMsg);
+                                render_denominator = format_Formula_For_MathJax(simplificationSteps_intermediate.factorizedDenominatorMsg);
+                                //Обработанные подставленные в числитель и знаменатель
+                                render_substituted_into_numerator = format_Formula_For_MathJax(substituted_into_numerator);
+                                render_substituted_into_denominator = format_Formula_For_MathJax(substituted_into_denominator);
+                                html += `<div class="mathjax-text">\\[
+                                \\lim_{{x \\to ${limitTo}}} ${formula} = \\lim_{{x \\to ${limitTo}}} \\frac{${render_numerator}}{${render_denominator}} = 
+                                \\lim_{{x \\to ${limitTo}}} \\frac{${render_substituted_into_numerator}}{${render_substituted_into_denominator}} =
+                                \\lim_{{x \\to ${limitTo}}} \\frac{${calculated_numerator}}{${calculated_denominator}}\\]
+                                </div>`;
+                                if ((calculated_numerator === '∞' && calculated_denominator === '∞') || (calculated_numerator === '0' && calculated_denominator === '0') || (calculated_numerator === '-∞' && calculated_denominator === '-∞')) {
+                                    html += `<div>Пока что избавиться от неопределённости не удалось. Попробуем применить другой способ, а именно разложение на множители, где какой-либо общий множиель выносится за скобку. Рассмотрим сначала числитель:<div>`;
+                                    decomposed_numerator = simplifyExpression_additionally(simplificationSteps_intermediate.factorizedNumeratorMsg);
+                                    decomposed_denominator = simplifyExpression_additionally(simplificationSteps_intermediate.factorizedDenominatorMsg);
+                                    let new_render_numerator = format_Formula_For_MathJax(decomposed_numerator.new_expression);
+                                    let new_render_denominator = format_Formula_For_MathJax(decomposed_denominator.new_expression);
+                                    let new_render_numerator_vrem = format_Formula_For_MathJax(decomposed_numerator.vrem);
+                                    let new_render_denominator_vrem = format_Formula_For_MathJax(decomposed_denominator.vrem);
+
+                                    example_changed = decomposed_numerator.expression_changed;
+                                    let Max_Pow = (decomposed_numerator.max_Power > decomposed_denominator.max_Power) ? decomposed_numerator.max_Power : decomposed_denominator.max_Power;
+
+                                    if (example_changed) {
+                                        html += `<div class="mathjax-text">\\[
+                                        ${render_numerator}=${new_render_numerator_vrem}=${new_render_numerator}\\]
+                                        </div>`;
+                                    }
+                                    else {
+                                        html += `<div>В данном числителе менять что-либо нецелесообразно.<div>`;
+                                    }
+
+                                    example_changed = decomposed_denominator.expression_changed;
+                                    html += `<div>Теперь рассмотрим знаменатель:<div>`;
+                                    if (example_changed) {
+                                        html += `<div class="mathjax-text">\\[
+                                        ${render_denominator}=${new_render_denominator_vrem}=${new_render_denominator}\\]
+                                        </div>`;
+                                    }
+                                    else {
+                                        html += `<div>В данном знаменателе менять что-либо нецелесообразно.<div>`;
+                                    }
+                                    html += `<div>Рассмотрим дробь целиком.<div>`;
+                                    let collected_fraction = `(${decomposed_numerator.new_expression})/(${decomposed_denominator.new_expression})`;
+                                    final_simplification = simplification_whole_fraction(collected_fraction, Max_Pow);
+
+                                    if (final_simplification.checking_for_number) {
+                                        html = `<div>При упрощении данной дроби можно сразу получить ответ:</div>`;
+                                        html += `<div class="mathjax-text">\\[
+                                        \\lim_{{x \\to ${limitTo}}} ${formula} = \\lim_{{x \\to ${limitTo}}} ${final_simplification.evaluatedString} \\]</div>
+                                        <div>Как извествено, предел const = const:</div>
+                                        <div class="mathjax-text">\\[
+                                        \\lim_{{\\begin{matrix} x \\to x_0 \\\\ x \\to {\\infty} \\end{matrix}}} C = C\\]
+                                        </div>
+                                        <div>Отсюда имеем:</div>
+                                        <div class="mathjax-text">\\[
+                                        \\lim_{{x \\to ${limitTo}}} ${final_simplification.evaluatedString} = ${final_simplification.evaluatedString}\\]
+                                        </div>`;
+                                        return html;
+                                    } else {
+                                        simplified_formula = final_simplification.simplifiedExpr;
+
+                                        result = calculate_Limit(simplified_formula, value_x);
+                                        let new_renderstep = nerdamer(final_simplification.simplifiedExpr);
+                                        new_renderstep = new_renderstep.toTeX();
+
+                                        html += `<div>Результат упрощения дроби:<div>
+                                            <div class="mathjax-text">\\[
+                                        \\lim_{{x \\to ${limitTo}}} ${renderedStep} = \\lim_{{x \\to ${limitTo}}} ${new_renderstep} \\]</div>`;
+                                        let intermediate_formula = substituteX(simplified_formula, value_x);
+                                        renderedStep = format_Formula_For_MathJax(intermediate_formula);
+                                        html += `
+                                        <div>После упрощения подставим значение \( x = ${value_x} \):</div>
+                                        <div class="mathjax-text">\\[
+                                        \\lim_{{x \\to ${limitTo}}} ${renderedStep}=\\lim_{{x \\to ${limitTo}}} ${result.decimal}\\]
+                                        </div>
+                                        <div>Как извествено, предел const = const:</div>
+                                        <div class="mathjax-text">\\[
+                                        \\lim_{{\\begin{matrix} x \\to x_0 \\\\ x \\to {\\infty} \\end{matrix}}} C = C\\]
+                                        </div>
+                                        <div>Отсюда имеем:</div>
+                                        <div class="mathjax-text">\\[
+                                        \\lim_{{x \\to ${limitTo}}} ${result.decimal} = ${result.decimal}\\]
+                                        </div>
+                                        <div>Результат в виде обычной дроби: <span class="mathjax-text">\\[${result.fraction}\\]</span></div>
+                                        <div>Результат в виде десятичной дроби: <span class="mathjax-text">\\[${result.decimal}\\]</span></div>`;
+                                        return html;
+                                    }
+                                } else {
+                                    html += `<div><b>Избавиться от неопределённости удалось, поэтому можно приступить к вычислению предела.</b></div>`;
+                                    result = calculate_Limit(simplified_formula, value_x);
+                                    let intermediate_formula = substituteX(simplified_formula, value_x);
+                                    renderedStep = format_Formula_For_MathJax(intermediate_formula);
+                                    html += `
+                                    <div>После упрощения подставим значение \( x = ${value_x} \):</div>
+                                    <div class="mathjax-text">\\[
+                                    \\lim_{{x \\to ${limitTo}}} ${renderedStep}=\\lim_{{x \\to ${limitTo}}} ${result.decimal}\\]
+                                    </div>
+                                    <div>Как извествено, предел const = const:</div>
+                                    <div class="mathjax-text">\\[
+                                    \\lim_{{\\begin{matrix} x \\to x_0 \\\\ x \\to {\\infty} \\end{matrix}}} C = C\\]
+                                    </div>
+                                    <div>Отсюда имеем:</div>
+                                    <div class="mathjax-text">\\[
+                                    \\lim_{{x \\to ${limitTo}}} ${result.decimal} = ${result.decimal}\\]
+                                    </div>
+                                    <div>Результат в виде обычной дроби: <span class="mathjax-text">\\[${result.fraction}\\]</span></div>
+                                    <div>Результат в виде десятичной дроби: <span class="mathjax-text">\\[${result.decimal}\\]</span></div>`;
+                                    return html;
+                                }
+                            } else {
+                                html += `<div>Приступим к вычислению предела.</div>`;
+                                result = calculate_Limit(simplified_formula, value_x);
+                                let intermediate_formula = substituteX(simplified_formula, value_x);
+                                renderedStep = format_Formula_For_MathJax(intermediate_formula);
+                                html += `
+                                    <div>После упрощения подставим значение \( x = ${value_x} \):</div>
+                                    <div class="mathjax-text">\\[
+                                    \\lim_{{x \\to ${limitTo}}} ${renderedStep}=\\lim_{{x \\to ${limitTo}}} ${result.decimal}\\]
+                                    </div>
+                                    <div>Как извествено, предел const = const:</div>
+                                    <div class="mathjax-text">\\[
+                                    \\lim_{{\\begin{matrix} x \\to x_0 \\\\ x \\to {\\infty} \\end{matrix}}} C = C\\]
+                                    </div>
+                                    <div>Отсюда имеем:</div>
+                                    <div class="mathjax-text">\\[
+                                    \\lim_{{x \\to ${limitTo}}} ${result.decimal} = ${result.decimal}\\]
+                                    </div>
+                                    <div>Результат в виде обычной дроби: <span class="mathjax-text">\\[${result.fraction}\\]</span></div>
+                                    <div>Результат в виде десятичной дроби: <span class="mathjax-text">\\[${result.decimal}\\]</span></div>`;
+                                return html;
+                            }
+                        } else {
+                            html += `<div>Упрощение дроби целиком не привело к изменениям</div>`;
+                            html += `<div>Попробуем применить другой способ, а именно разложение на множители, где какой-либо общий множиель выносится за скобку. Рассмотрим сначала числитель:<div>`;
+                            decomposed_numerator = simplifyExpression_additionally(simplificationSteps_intermediate.factorizedNumeratorMsg);
+                            decomposed_denominator = simplifyExpression_additionally(simplificationSteps_intermediate.factorizedDenominatorMsg);
+                            let new_render_numerator = format_Formula_For_MathJax(decomposed_numerator.new_expression);
+                            let new_render_denominator = format_Formula_For_MathJax(decomposed_denominator.new_expression);
+                            let new_render_numerator_vrem = format_Formula_For_MathJax(decomposed_numerator.vrem);
+                            let new_render_denominator_vrem = format_Formula_For_MathJax(decomposed_denominator.vrem);
+
+                            example_changed = decomposed_numerator.expression_changed;
+                            let Max_Pow = (decomposed_numerator.max_Power > decomposed_denominator.max_Power) ? decomposed_numerator.max_Power : decomposed_denominator.max_Power;
+                            if (example_changed) {
+                                html += `<div class="mathjax-text">\\[
+                                        ${render_numerator}=${new_render_numerator_vrem}=${new_render_numerator}\\]
+                                        </div>`;
+                            }
+                            else {
+                                html += `<div>В данном числителе менять что-либо нецелесообразно.<div>`;
+                            }
+
+                            example_changed = decomposed_denominator.expression_changed;
+                            html += `<div>Теперь рассмотрим знаменатель:<div>`;
+                            if (example_changed) {
+                                html += `<div class="mathjax-text">\\[
+                                        ${render_denominator}=${new_render_denominator_vrem}=${new_render_denominator}\\]
+                                        </div>`;
+                            }
+                            else {
+                                html += `<div>В данном знаменателе менять что-либо нецелесообразно.<div>`;
+                            }
+                            html += `<div>Рассмотрим дробь целиком.<div>`;
+                            let collected_fraction = `(${decomposed_numerator.new_expression})/(${decomposed_denominator.new_expression})`;
+                            final_simplification = simplification_whole_fraction(collected_fraction, Max_Pow);
+                            if (final_simplification.checking_for_number) {
+                                html = `<div>При упрощении данной дроби можно сразу получить ответ:</div>`;
+                                html += `<div class="mathjax-text">\\[
+                                        \\lim_{{x \\to ${limitTo}}} ${formula} = \\lim_{{x \\to ${limitTo}}} ${final_simplification.evaluatedString} \\]</div>
+                                        <div>Как извествено, предел const = const:</div>
+                                        <div class="mathjax-text">\\[
+                                        \\lim_{{\\begin{matrix} x \\to x_0 \\\\ x \\to {\\infty} \\end{matrix}}} C = C\\]
+                                        </div>
+                                        <div>Отсюда имеем:</div>
+                                        <div class="mathjax-text">\\[
+                                        \\lim_{{x \\to ${limitTo}}} ${final_simplification.evaluatedString} = ${final_simplification.evaluatedString}\\]
+                                        </div>`;
+                                return html;
+                            } else {
+                                simplified_formula = final_simplification.simplifiedExpr;
+                                result = calculate_Limit(simplified_formula, value_x);
+                                let new_renderstep = nerdamer(final_simplification.simplifiedExpr);
+                                new_renderstep = new_renderstep.toTeX();
+
+                                html += `<div>Результат упрощения дроби:<div>
+                                            <div class="mathjax-text">\\[
+                                        \\lim_{{x \\to ${limitTo}}} ${renderedStep} = \\lim_{{x \\to ${limitTo}}} ${new_renderstep} \\]</div>`;
+                                let intermediate_formula = substituteX(simplified_formula, value_x);
+                                renderedStep = format_Formula_For_MathJax(intermediate_formula);
+                                html += `
+                                        <div>После упрощения подставим значение \( x = ${value_x} \):</div>
+                                        <div class="mathjax-text">\\[
+                                        \\lim_{{x \\to ${limitTo}}} ${renderedStep}=\\lim_{{x \\to ${limitTo}}} ${result.decimal}\\]
+                                        </div>
+                                        <div>Как извествено, предел const = const:</div>
+                                        <div class="mathjax-text">\\[
+                                        \\lim_{{\\begin{matrix} x \\to x_0 \\\\ x \\to {\\infty} \\end{matrix}}} C = C\\]
+                                        </div>
+                                        <div>Отсюда имеем:</div>
+                                        <div class="mathjax-text">\\[
+                                        \\lim_{{x \\to ${limitTo}}} ${result.decimal} = ${result.decimal}\\]
+                                        </div>
+                                        <div>Результат в виде обычной дроби: <span class="mathjax-text">\\[${result.fraction}\\]</span></div>
+                                        <div>Результат в виде десятичной дроби: <span class="mathjax-text">\\[${result.decimal}\\]</span></div>`;
+                                return html;
+                            }
+                        }
+                    }
+                }
+            }
+            return html;
+        }
+
+        function find_Roots(expression) {
+
+            let has_Root = false;
+            let bases = [];
+            let numerators = [];
+            let denominators = [];
+            let signs = [];
+            let remainingExpression = expression;
+
+            function analyzeRoots(exp) {
+                const sqrtRegex = /sqrt\((.*?)\)/g;
+                let match;
+                while ((match = sqrtRegex.exec(exp)) !== null) {
+                    has_Root = true;
+                    bases.push(match[1]);
+                    numerators.push('1');
+                    denominators.push('2');
+                    const signMatch = exp.substring(0, match.index).match(/[-+*/^]?\s*$/);
+                    signs.push(signMatch ? signMatch[0].trim() || '+' : '+');
+                    remainingExpression = remainingExpression.replace(match[0], '');
+                }
+
+                const generalRootRegex = /\((.*?)\)\^\((\d+)\/(\d+)\)/g;
+
+                while ((match = generalRootRegex.exec(exp)) !== null) {
+                    has_Root = true;
+                    bases.push(match[1]);
+                    numerators.push(match[2]);
+                    denominators.push(match[3]); 
+                    const signMatch = exp.substring(0, match.index).match(/[-+*/^]?\s*$/);
+                    signs.push(signMatch ? signMatch[0].trim() || '+' : '+');
+                    remainingExpression = remainingExpression.replace(match[0], '');
+                }
+            }
+
+            analyzeRoots(expression);
+            remainingExpression = remainingExpression.replace(/\s+/g, '');  
+            remainingExpression = remainingExpression.replace(/^[+]+|[+]+$/g, '');  
+            if (remainingExpression === '+' || remainingExpression === '-' || remainingExpression === '') remainingExpression = '0';
+            return {
+                has_Root: has_Root,
+                bases: bases,
+                numerators: numerators,
+                denominators: denominators,
+                signs: signs,
+                remaining_Expression: remainingExpression
+            };
+        }
+
+        function showLoadingIndicator() {
+            document.getElementById('loadingIndicator').style.display = 'block';
+        }
+
+        function hideLoadingIndicator() {
+            document.getElementById('loadingIndicator').style.display = 'none';
+        }
+
+        var limitTo;
+        function updateRenderedEquation() {
+            showLoadingIndicator();
+            setTimeout(() => {
+                var value_x = document.getElementById('approach_value').value.trim() || '0';
+                value_x = nerdamer(value_x);
+                var user_Formula = document.getElementById('input-formula').value;
+                var mathJax_Formatted_Formula = format_Formula_For_MathJax(user_Formula);
+
+                limitTo = nerdamer(value_x);
+                if (value_x === '∞') {
+                    limitTo = '\\infty';
+                } else if (value_x === '-∞') {
+                    limitTo = '-\\infty';
+                } else {
+                    limitTo = limitTo.toTeX();
+                }
+
+                if (value_x === '0') {
+                    limitTo = '0';
+                }
+                var mathJaxEquation = `\\lim_{x \\to ${limitTo}} ${mathJax_Formatted_Formula}`;
+                document.getElementById('renderedEquation').innerHTML = '$$' + mathJaxEquation + '$$';
+
+                MathJax.typesetPromise([document.getElementById('renderedEquation')])
+                    .then(function () {
+                        var renderedEquation = document.getElementById('renderedEquation');
+                        if (renderedEquation.innerHTML.includes('Extra \\left or missing \\right') ||
+                            renderedEquation.innerHTML.includes('Missing \\left or extra \\right')) {
+                            renderedEquation.innerHTML = 'Для продолжения работы закройте скобку.';
+                        }
+                        else if (renderedEquation.innerHTML.includes('Missing superscript or subscript argument')) {
+                            renderedEquation.innerHTML = 'Для продолжения работы введите степень.';
+                        }
+                        hideLoadingIndicator();
+                    })
+                    .catch(function (err) {
+                        hideLoadingIndicator();
+                    });
+            }, 10);
+        }
+
+        function setInfinity() {
+            document.getElementById('approach_value').value = '∞';
+            updateRenderedEquation();
+        }
+
+        var active_Button = null;
+
+        function toggleButton(buttonId) {
+            if (active_Button) {
+                document.getElementById(active_Button).classList.remove('active');
+            }
+            if (active_Button !== buttonId) {
+                document.getElementById(buttonId).classList.add('active');
+                active_Button = buttonId;
+            } else {
+                active_Button = null;
+            }
+        }
+
+        function updateMathJax() {
+            MathJax.typesetPromise();
+        }
+
+        window.onload = function () {
+            var value_x = document.getElementById('approach_value').value || '0';
+            var mathJaxEquation = `\\lim_{x \\to ${value_x}}`;
+            document.getElementById('renderedEquation').innerHTML = '$$' + mathJaxEquation + '$$';
+
+            MathJax.typesetPromise([document.getElementById('renderedEquation')]);
+        };
+
+        document.getElementById('approach_value').addEventListener('input', updateRenderedEquation);
+
+    </script>
+</body>
+
+</html>
